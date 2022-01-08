@@ -1,0 +1,45 @@
+- npm install @reduxjs/toolkit react-redux
+- create foler servers & add code setup  
+
+--> {
+    import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+
+        export const postApi = createApi({
+        reducerPath: 'postApi',
+        baseQuery: fetchBaseQuery({
+            baseUrl: 'https://jsonplaceholder.typicode.com/',
+        }),
+
+        endpoints: (builder) => ({
+            getAllPost: builder.query({
+            query: () => ({
+                url: 'posts',
+                method: 'GET',
+            }),
+            }),
+        }),
+        })
+
+        export const { useGetAllPostQuery } = postApi
+}
+
+- create folder app & add code setup
+            ---> {
+                import { configureStore } from '@reduxjs/toolkit'
+        import { setupListeners } from '@reduxjs/toolkit/query'
+        import { postApi } from '../services/post'
+
+        export const store = configureStore({
+        reducer: {
+            [postApi.reducerPath]: postApi.reducer,
+        },
+        middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware.concat(postApi.middleware),
+        })
+
+
+        setupListeners(store.dispatch)
+    }
+
+- import store to index.js
+
